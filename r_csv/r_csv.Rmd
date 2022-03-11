@@ -1,0 +1,34 @@
+---
+title: "r_csv"
+output: html_document
+---
+
+# load library 
+if (!("rvest" %in% installed.packages()))
+{
+install.packages("rvest")
+}
+
+library(rvest)
+library(XML)
+
+#get the csv example
+
+wiki = read_html("https://en.wikipedia.org/wiki/Comma-separated_values")
+
+#teacher solution
+csv_tables = wiki %>% html_nodes(xpath = '//h2[contains(.,"Example")]//following-sibling::pre') %>% html_text()
+
+#my solution
+
+#copy xpath with chrome (select node --> copy --> copy XPath)
+my_html = html_nodes(wiki,xpath= '//*[@id="mw-content-text"]/div[1]/pre[1]/text()')
+
+#convert the html_nodes to a dataframe
+my_df = data.frame(hrefs=as(my_html, "character"))
+
+#quote=FALSE --> no escape for quotes, col.names = FALSE --> no header (hrefs), row.names = FALSE --> no number on beginning of line
+write.table(my_df,file="my_csv.csv",quote=FALSE,col.names=FALSE, row.names=FALSE)
+
+data = read.csv("my_csv.csv")
+max(data.p)
